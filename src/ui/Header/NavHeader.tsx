@@ -13,7 +13,7 @@ const NavHeader: React.FC = () => {
       <NavHeaderStyled>
         <li>
           <NavLink
-            href="/"
+            href="/appreciations-livewall"
             activeClass="bg-purple"
             name="Appreciations live"
             bgColor={BrandingColors.violet}

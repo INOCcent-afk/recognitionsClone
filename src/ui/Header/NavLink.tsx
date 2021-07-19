@@ -3,7 +3,6 @@ import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
-import { BrandingColors } from "../../utils/Colors";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -39,6 +38,7 @@ export const LinkStyled = styled.a<{ bgColor: string }>`
   padding: 8px 15px;
   border-radius: 4px;
   width: 100%;
+  cursor: pointer;
 
   &:hover {
     background-color: ${(props) => props.bgColor};

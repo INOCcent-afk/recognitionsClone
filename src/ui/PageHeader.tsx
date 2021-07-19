@@ -4,10 +4,16 @@ import { BrandingColors } from "../utils/Colors";
 
 import styled from "styled-components";
 
-const PageHeader = () => {
+type Props = {
+  title: string;
+  subtitle: string;
+};
+
+const PageHeader: React.FC<Props> = ({ title, subtitle }: Props) => {
   return (
     <PageContainer>
-      <h1>Page Header</h1>
+      <p>{subtitle}</p>
+      <h1>{title}</h1>
     </PageContainer>
   );
 };
