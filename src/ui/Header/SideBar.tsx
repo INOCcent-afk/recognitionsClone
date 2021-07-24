@@ -26,6 +26,7 @@ export const SidebarStyled = styled.div`
   right: 0;
   width: 100%;
   padding: 30px;
+  z-index: 500;
 
   @media only screen and (min-width: ${ScreenSizes.lg}) {
     display: none;

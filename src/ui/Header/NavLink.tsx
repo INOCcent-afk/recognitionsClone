@@ -23,7 +23,7 @@ const NavLink: React.FC<Props> = ({
   return (
     <Link href={href}>
       <LinkStyled
-        className={router.pathname === href ? activeClass : ""}
+        className={router.pathname.includes(href) ? activeClass : ""}
         bgColor={bgColor}
       >
         {name}
@@ -39,6 +39,7 @@ export const LinkStyled = styled.a<{ bgColor: string }>`
   border-radius: 4px;
   width: 100%;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     background-color: ${(props) => props.bgColor};

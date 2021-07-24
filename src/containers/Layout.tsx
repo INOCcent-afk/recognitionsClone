@@ -1,17 +1,21 @@
 import React from "react";
 
-import styled from "styled-components";
+import { useRouter } from "next/router";
 
 import Header from "../ui/Header/Header";
+
+import styled from "styled-components";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const Layout: React.FC<Props> = ({ children }: Props) => {
+  const router = useRouter();
+
   return (
     <LayoutStyled>
-      <Header />
+      {router.query.id?.includes("say-thanks") ? null : <Header />}
       {children}
     </LayoutStyled>
   );
