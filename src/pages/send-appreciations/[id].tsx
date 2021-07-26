@@ -4,6 +4,8 @@ import { BrandingColors } from "../../utils/Colors";
 import { useRouter } from "next/router";
 import { isIndividual, isStore, isTeam } from "../../utils/checkPath";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { ScreenSizes } from "../../utils/Screens";
+import { currentDate } from "../../utils/getCurrentDate";
 
 import PageHeader from "../../ui/PageHeader";
 
@@ -12,6 +14,7 @@ import CardPickerSteps from "../../ui/CardPickerSteps";
 import InputSearch from "../../ui/inputs/InputSearch";
 import CardPreviewIcon from "../../icons/CardPreviewIcon";
 import Button from "../../ui/Button";
+
 import {
   defaultState,
   step1Done,
@@ -25,14 +28,15 @@ import {
   step5View,
   step6View,
 } from "../../redux/SendForm.slice";
-import { ScreenSizes } from "../../utils/Screens";
 
 const SayThanks = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+
   const [title, setTitle] = React.useState("individual");
+
   const [cardData, setCardData] = React.useState({
-    date: "",
+    date: currentDate,
     receiver: "",
     receiverJobDesc: "",
     icon: "",
@@ -67,6 +71,10 @@ const SayThanks = () => {
 
     dispatch(defaultState());
   }, []);
+
+  React.useEffect(() => {
+    setCardData({ ...cardData, cardType: title });
+  }, [title]);
 
   return (
     <>

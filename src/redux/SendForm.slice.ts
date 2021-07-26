@@ -287,34 +287,8 @@ export const SendFormSlice = createSlice({
         },
       };
     },
-    defaultState: (state) => {
-      return {
-        ...state,
-        step1: {
-          isDone: false,
-          onView: true,
-        },
-        step2: {
-          isDone: false,
-          onView: false,
-        },
-        step3: {
-          isDone: false,
-          onView: false,
-        },
-        step4: {
-          isDone: false,
-          onView: false,
-        },
-        step5: {
-          isDone: false,
-          onView: false,
-        },
-        step6: {
-          isDone: false,
-          onView: false,
-        },
-      };
+    defaultState: () => {
+      return initialState;
     },
   },
 });
