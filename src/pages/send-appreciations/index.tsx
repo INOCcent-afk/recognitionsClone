@@ -11,8 +11,6 @@ import UserIcon from "../../icons/UserIcon";
 import UserGroup from "../../icons/UserGroup";
 
 import styled from "styled-components";
-import Link from "next/link";
-import { ScreenSizes } from "../../utils/Screens";
 
 const SendAppreciations = () => {
   return (
@@ -34,14 +32,14 @@ const SendAppreciations = () => {
             />
             <LargeButton
               link="say-thanks-team"
-              title="To an individual"
-              desc="Show your appreciation to someone who has gone above and beyond."
+              title="To a team"
+              desc="Send your appreciation to a group of people who have worked together as a team."
               icon={<UserGroup width="30" height="30" />}
             />
             <LargeButton
               link="say-thanks-group"
-              title="To an individual"
-              desc="Show your appreciation to someone who has gone above and beyond."
+              title="To a whole store"
+              desc="Send your appreciation to eveyone in a retail store."
               icon={<StoreIcon width="30" height="30" />}
             />
           </PageLeftPanel>

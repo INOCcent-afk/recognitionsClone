@@ -6,17 +6,24 @@ import { BrandingColors } from "../utils/Colors";
 type Props = {
   children: React.ReactNode;
   additionalClassname?: string;
+  buttonType?: string;
 };
 
-const Button: React.FC<Props> = ({ children, additionalClassname }: Props) => {
+const Button: React.FC<Props> = ({
+  children,
+  additionalClassname,
+  buttonType,
+}: Props) => {
   return (
-    <ButtonStyled className={additionalClassname}>{children}</ButtonStyled>
+    <ButtonStyled squared={buttonType} className={additionalClassname}>
+      {children}
+    </ButtonStyled>
   );
 };
 
 export default Button;
 
-export const ButtonStyled = styled.button`
+export const ButtonStyled = styled.button<{ squared: string | undefined }>`
   padding: 10px 30px;
   background-color: black;
   border-radius: 20px;
@@ -31,4 +38,19 @@ export const ButtonStyled = styled.button`
   &:hover {
     color: white;
   }
+
+  ${(props) =>
+    props.squared &&
+    `
+      border-radius: 4px;
+      border: 2px solid ${BrandingColors.blue};
+      background-color: ${BrandingColors.blue};
+      color: white;
+      letter-spacing: unset;
+
+      &:hover { 
+        background-color: white;
+        color: ${BrandingColors.blue};
+      }
+  `}
 `;

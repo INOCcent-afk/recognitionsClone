@@ -1,12 +1,13 @@
 import React from "react";
 
 import { useAppDispatch } from "../redux/hook";
+import { useRouter } from "next/router";
+import { BrandingColors } from "../utils/Colors";
 
 import styled from "styled-components";
 
 import Button from "./Button";
 import CloseIcon from "../icons/CloseIcon";
-import { useRouter } from "next/router";
 
 type Props = {
   title: string;
@@ -40,10 +41,14 @@ const PageHeader: React.FC<Props> = ({
         </FilterContainerStyled>
       ) : null}
       {isButtonClose ? (
-        <CloseIcon
-          onClick={() => router.push("/send-appreciations")}
-          style={{ cursor: "pointer" }}
-        />
+        <CloseButtonContainerStyled>
+          <CloseIcon
+            onClick={() => router.push("/send-appreciations")}
+            width="40"
+            height="40"
+            style={{ cursor: "pointer" }}
+          />
+        </CloseButtonContainerStyled>
       ) : null}
     </PageContainerStyled>
   );
@@ -58,7 +63,6 @@ export const PageContainerStyled = styled.div<{ bgColor: string }>`
   padding: 20px 30px;
   flex-wrap: wrap;
   gap: 20px;
-
   color: white;
   display: flex;
   align-items: center;
@@ -75,3 +79,16 @@ export const PageTitleContainerStyled = styled.div`
 `;
 
 export const FilterContainerStyled = styled.div``;
+
+export const CloseButtonContainerStyled = styled.div`
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 10px;
+
+  &:hover {
+    background-color: ${BrandingColors.violet};
+  }
+`;

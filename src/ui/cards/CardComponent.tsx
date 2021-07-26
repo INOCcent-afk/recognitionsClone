@@ -57,9 +57,11 @@ const CardComponent: React.FC<CardModelTypes> = ({
         </CardComponentHeaderStyled>
         <CardComponentBodyStyled>
           <p>{title}</p>
-          <CardComponentGifStyled>
-            {gif ? <img src={gif} alt="" /> : null}
-          </CardComponentGifStyled>
+          {gif ? (
+            <CardComponentGifStyled>
+              <img src={gif} alt="" />
+            </CardComponentGifStyled>
+          ) : null}
         </CardComponentBodyStyled>
         <CardComponentFooterStyled>
           <p>

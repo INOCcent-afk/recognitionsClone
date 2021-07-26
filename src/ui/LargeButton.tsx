@@ -37,6 +37,7 @@ export const LargeButtonStyled = styled.div`
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   justify-content: space-between;
+  min-height: 130px;
 
   &:hover {
     background-color: ${BrandingColors.blue20};
