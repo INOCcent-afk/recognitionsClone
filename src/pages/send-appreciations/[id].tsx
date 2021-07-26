@@ -6,6 +6,7 @@ import { isIndividual, isStore, isTeam } from "../../utils/checkPath";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { ScreenSizes } from "../../utils/Screens";
 import { currentDate } from "../../utils/getCurrentDate";
+import { getUsers } from "../../utils/api/getUsers";
 
 import PageHeader from "../../ui/PageHeader";
 
@@ -14,6 +15,7 @@ import CardPickerSteps from "../../ui/CardPickerSteps";
 import InputSearch from "../../ui/inputs/InputSearch";
 import CardPreviewIcon from "../../icons/CardPreviewIcon";
 import Button from "../../ui/Button";
+import SearchDropdown from "../../ui/searchDropdown";
 
 import {
   defaultState,
@@ -28,8 +30,9 @@ import {
   step5View,
   step6View,
 } from "../../redux/SendForm.slice";
+import { useQuery } from "react-query";
 
-const SayThanks = () => {
+const SayThanks: React.FC = ({ users }: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -60,6 +63,10 @@ const SayThanks = () => {
 
   const pathID = router.query.id;
 
+  const { data } = useQuery("users", getUsers, {
+    initialData: users,
+  });
+
   React.useEffect(() => {
     if (isIndividual(pathID)) {
       setTitle("Individual");
@@ -85,6 +92,7 @@ const SayThanks = () => {
         isButton={false}
         isButtonClose={true}
       />
+
       <CardPickerStyled>
         <CardPickerLeftPanel>
           {isIndividual(pathID) ? (
@@ -134,6 +142,7 @@ const SayThanks = () => {
                   setCardData({ ...cardData, receiver: e.target.value })
                 }
               />
+              <SearchDropdown data={data} />
             </CardPickerMiddlePanelWrapper>
           ) : null}
           {stepTwoView ? (
@@ -300,3 +309,11 @@ export const NextStepWrapper = styled.div`
   left: 50%;
   transform: translateX(-50%);
 `;
+
+export const getServerSideProps = async () => {
+  const users = await getUsers();
+
+  return {
+    props: { users },
+  };
+};

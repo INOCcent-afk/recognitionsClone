@@ -1,15 +1,31 @@
 import React from "react";
 
-const searchDropdown = () => {
+type Props = {
+  data: {
+    data: [];
+  };
+};
+
+const SearchDropdown: React.FC<Props> = ({ data }: Props) => {
   return (
     <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
+      {data.data.map(
+        (user: {
+          email: string;
+          firstName: string;
+          lastName: string;
+          picture: string;
+        }) => (
+          <>
+            <li>{user.email}</li>
+            <li>{user.firstName}</li>
+            <li>{user.lastName}</li>
+            <img src={user.picture} />
+          </>
+        )
+      )}
     </ul>
   );
 };
 
-export default searchDropdown;
+export default SearchDropdown;
