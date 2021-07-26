@@ -90,11 +90,12 @@ const CardPickerSteps: React.FC<Props> = ({
           4.{stepFourDone ? "Edit" : "Add"} {step4}
         </li>
         <li className={liClassNames5} onClick={() => dispatch(step5View())}>
-          5.{stepFiveDone ? "Edit" : "Add"} {step5}
+          5.{step5 !== "Preview & send" ? (stepFiveDone ? "Edit" : "Add") : ""}{" "}
+          {step5}
         </li>
         {step6 ? (
           <li className={liClassNames6} onClick={() => dispatch(step6View())}>
-            6.{stepSixDone ? "Edit" : "Add"} {step6}
+            6.{step6}
           </li>
         ) : null}
       </CardPickerStepsStyled>

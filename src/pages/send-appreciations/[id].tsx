@@ -13,6 +13,7 @@ import InputSearch from "../../ui/inputs/InputSearch";
 import CardPreviewIcon from "../../icons/CardPreviewIcon";
 import Button from "../../ui/Button";
 import {
+  defaultState,
   step1Done,
   step2Done,
   step2View,
@@ -22,7 +23,6 @@ import {
   step4View,
   step5Done,
   step5View,
-  step6Done,
   step6View,
 } from "../../redux/SendForm.slice";
 import { ScreenSizes } from "../../utils/Screens";
@@ -31,6 +31,21 @@ const SayThanks = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [title, setTitle] = React.useState("individual");
+  const [cardData, setCardData] = React.useState({
+    date: "",
+    receiver: "",
+    receiverJobDesc: "",
+    icon: "",
+    title: "",
+    content: "",
+    sender: "",
+    senderJobDesc: "",
+    gif: "",
+    cardType: "",
+    value: "",
+    members: "",
+    membersCount: "",
+  });
 
   const stepOneView = useAppSelector((state) => state.SendForm.step1.onView);
   const stepTwoView = useAppSelector((state) => state.SendForm.step2.onView);
@@ -49,7 +64,9 @@ const SayThanks = () => {
     } else if (isStore(pathID)) {
       setTitle("Store");
     }
-  }, [router]);
+
+    dispatch(defaultState());
+  }, []);
 
   return (
     <>
@@ -92,39 +109,96 @@ const SayThanks = () => {
           ) : null}
         </CardPickerLeftPanel>
         <CardPickerMiddlePanel>
-          <CardPickerMiddlePanelWrapper>
-            <InputSearch
-              placeholder={
-                isIndividual(pathID)
-                  ? "Enter a recipients name"
-                  : isTeam(pathID)
-                  ? "Enter a recipients name"
-                  : isStore(pathID)
-                  ? "Enter a store"
-                  : ""
-              }
-            />
-          </CardPickerMiddlePanelWrapper>
-          <NextStepWrapper
-            onClick={() => {
-              stepOneView
-                ? (dispatch(step1Done()), dispatch(step2View()))
-                : stepTwoView
-                ? (dispatch(step2Done()), dispatch(step3View()))
-                : stepThreeView
-                ? (dispatch(step3Done()), dispatch(step4View()))
-                : stepFourView
-                ? (dispatch(step4Done()), dispatch(step5View()))
-                : stepFiveView
-                ? (dispatch(step5Done()), dispatch(step6View()))
-                : //   LAST STEP IS SUBMIT
-                  //   : stepSixView
-                  //   ? dispatch(step6Done())
-                  null;
-            }}
-          >
-            <Button buttonType="squared">Continue</Button>
-          </NextStepWrapper>
+          {stepOneView ? (
+            <CardPickerMiddlePanelWrapper>
+              <InputSearch
+                placeholder={
+                  isIndividual(pathID)
+                    ? "Enter a recipients name"
+                    : isTeam(pathID)
+                    ? "Enter a recipients name"
+                    : isStore(pathID)
+                    ? "Enter a store"
+                    : ""
+                }
+                value={cardData.receiver}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCardData({ ...cardData, receiver: e.target.value })
+                }
+              />
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {stepTwoView ? (
+            <CardPickerMiddlePanelWrapper>
+              <InputSearch
+                placeholder="Add card title"
+                value={cardData.title}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCardData({ ...cardData, title: e.target.value })
+                }
+              />
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {stepThreeView ? (
+            <CardPickerMiddlePanelWrapper>
+              <h1>Step 3</h1>
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {stepFourView ? (
+            <CardPickerMiddlePanelWrapper>
+              <h1>Step 4</h1>
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {stepFiveView ? (
+            <CardPickerMiddlePanelWrapper>
+              <h1>Step 5</h1>
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {stepSixView ? (
+            <CardPickerMiddlePanelWrapper>
+              <h1>Step 6</h1>
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          <pre>{JSON.stringify(cardData, null, 2)}</pre>
+          {isTeam(pathID) && !stepSixView ? (
+            <NextStepWrapper
+              onClick={() => {
+                stepOneView
+                  ? (dispatch(step1Done()), dispatch(step2View()))
+                  : stepTwoView
+                  ? (dispatch(step2Done()), dispatch(step3View()))
+                  : stepThreeView
+                  ? (dispatch(step3Done()), dispatch(step4View()))
+                  : stepFourView
+                  ? (dispatch(step4Done()), dispatch(step5View()))
+                  : stepFiveView
+                  ? (dispatch(step5Done()), dispatch(step6View()))
+                  : null;
+              }}
+            >
+              <Button buttonType="squared">Continue</Button>
+            </NextStepWrapper>
+          ) : isIndividual(pathID) || isStore(pathID) ? (
+            !stepFiveView ? (
+              <NextStepWrapper
+                onClick={() => {
+                  stepOneView
+                    ? (dispatch(step1Done()), dispatch(step2View()))
+                    : stepTwoView
+                    ? (dispatch(step2Done()), dispatch(step3View()))
+                    : stepThreeView
+                    ? (dispatch(step3Done()), dispatch(step4View()))
+                    : stepFourView
+                    ? (dispatch(step4Done()), dispatch(step5View()))
+                    : stepFiveView
+                    ? (dispatch(step5Done()), dispatch(step6View()))
+                    : null;
+                }}
+              >
+                <Button buttonType="squared">Continue</Button>
+              </NextStepWrapper>
+            ) : null
+          ) : null}
         </CardPickerMiddlePanel>
         <CardPickerRightPanel>
           <h4>Card Preview</h4>
@@ -150,9 +224,9 @@ export const CardPickerStyled = styled.div`
   justify-content: space-between;
   color: white;
   flex-direction: column;
-  margin-bottom: 80px;
+  margin: 0 auto 80px auto;
 
-  @media only screen and (min-width: ${ScreenSizes.lg}) {
+  @media only screen and (min-width: ${ScreenSizes.xl}) {
     margin: 80px auto;
   }
 

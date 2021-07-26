@@ -7,15 +7,21 @@ type Props = {
   children: React.ReactNode;
   additionalClassname?: string;
   buttonType?: string;
+  disabled?: boolean;
 };
 
 const Button: React.FC<Props> = ({
   children,
   additionalClassname,
   buttonType,
+  disabled,
 }: Props) => {
   return (
-    <ButtonStyled squared={buttonType} className={additionalClassname}>
+    <ButtonStyled
+      disabled={disabled}
+      squared={buttonType}
+      className={additionalClassname}
+    >
       {children}
     </ButtonStyled>
   );

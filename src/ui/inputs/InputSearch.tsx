@@ -4,13 +4,24 @@ import SearchIcon from "../../icons/SearchIcon";
 
 type Props = {
   placeholder: string;
+  value: string;
+  onChange: any;
 };
 
-const InputSearch: React.FC<Props> = ({ placeholder }: Props) => {
+const InputSearch: React.FC<Props> = ({
+  placeholder,
+  value,
+  onChange,
+}: Props) => {
   return (
     <InputSearchStyled>
       <SearchIcon />
-      <InputStyled type="text" placeholder={placeholder} />
+      <InputStyled
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
     </InputSearchStyled>
   );
 };
