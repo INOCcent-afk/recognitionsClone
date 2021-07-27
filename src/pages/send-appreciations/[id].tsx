@@ -5,8 +5,15 @@ import { useRouter } from "next/router";
 import { isIndividual, isStore, isTeam } from "../../utils/checkPath";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { ScreenSizes } from "../../utils/Screens";
-import { currentDate } from "../../utils/getCurrentDate";
 import { getUsers } from "../../utils/api/getUsers";
+import { useQuery } from "react-query";
+import {
+  setCardDefaultState,
+  setCardReceiver,
+  setCardTeamName,
+  setCardTitle,
+  setCardType,
+} from "../../redux/data.slice";
 
 import PageHeader from "../../ui/PageHeader";
 
@@ -16,6 +23,8 @@ import InputSearch from "../../ui/inputs/InputSearch";
 import CardPreviewIcon from "../../icons/CardPreviewIcon";
 import Button from "../../ui/Button";
 import SearchDropdown from "../../ui/searchDropdown";
+import QualityPicker from "../../ui/cards/QualityPicker";
+import InputMessage from "../../ui/inputs/InputMessage";
 
 import {
   defaultState,
@@ -30,7 +39,7 @@ import {
   step5View,
   step6View,
 } from "../../redux/SendForm.slice";
-import { useQuery } from "react-query";
+import CardPreview from "../../ui/cards/CardPreview";
 
 const SayThanks: React.FC = ({ users }: any) => {
   const dispatch = useAppDispatch();
@@ -38,28 +47,20 @@ const SayThanks: React.FC = ({ users }: any) => {
 
   const [title, setTitle] = React.useState("individual");
 
-  const [cardData, setCardData] = React.useState({
-    date: currentDate,
-    receiver: "",
-    receiverJobDesc: "",
-    icon: "",
-    title: "",
-    content: "",
-    sender: "",
-    senderJobDesc: "",
-    gif: "",
-    cardType: "",
-    value: "",
-    members: "",
-    membersCount: "",
-  });
-
   const stepOneView = useAppSelector((state) => state.SendForm.step1.onView);
   const stepTwoView = useAppSelector((state) => state.SendForm.step2.onView);
   const stepThreeView = useAppSelector((state) => state.SendForm.step3.onView);
   const stepFourView = useAppSelector((state) => state.SendForm.step4.onView);
   const stepFiveView = useAppSelector((state) => state.SendForm.step5.onView);
   const stepSixView = useAppSelector((state) => state.SendForm.step6.onView);
+
+  const stepOneDone = useAppSelector((state) => state.SendForm.step1.isDone);
+
+  const DataReceiver = useAppSelector((state) => state.CardData.receiver);
+  const DataTitle = useAppSelector((state) => state.CardData.title);
+  const DataTeamName = useAppSelector((state) => state.CardData.teamName);
+  const DataContent = useAppSelector((state) => state.CardData.content);
+  const cardData = useAppSelector((state) => state.CardData);
 
   const pathID = router.query.id;
 
@@ -77,10 +78,11 @@ const SayThanks: React.FC = ({ users }: any) => {
     }
 
     dispatch(defaultState());
+    dispatch(setCardDefaultState());
   }, []);
 
   React.useEffect(() => {
-    setCardData({ ...cardData, cardType: title });
+    dispatch(setCardType(title));
   }, [title]);
 
   return (
@@ -92,7 +94,6 @@ const SayThanks: React.FC = ({ users }: any) => {
         isButton={false}
         isButtonClose={true}
       />
-
       <CardPickerStyled>
         <CardPickerLeftPanel>
           {isIndividual(pathID) ? (
@@ -137,43 +138,81 @@ const SayThanks: React.FC = ({ users }: any) => {
                     ? "Enter a store"
                     : ""
                 }
-                value={cardData.receiver}
+                value={DataReceiver}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCardData({ ...cardData, receiver: e.target.value })
+                  dispatch(setCardReceiver(e.target.value))
                 }
               />
-              <SearchDropdown data={data} />
+              {DataReceiver ? (
+                <SearchDropdown receiver={DataReceiver} data={data} />
+              ) : null}
             </CardPickerMiddlePanelWrapper>
           ) : null}
-          {stepTwoView ? (
+          {isIndividual(pathID) || isStore(pathID) ? (
+            stepTwoView ? (
+              <CardPickerMiddlePanelWrapper>
+                <InputSearch
+                  placeholder="Add card title"
+                  value={DataTitle}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch(setCardTitle(e.target.value))
+                  }
+                />
+              </CardPickerMiddlePanelWrapper>
+            ) : null
+          ) : stepTwoView ? (
+            <CardPickerMiddlePanelWrapper>
+              <InputSearch
+                placeholder="Add team title"
+                value={DataTeamName}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch(setCardTeamName(e.target.value))
+                }
+              />
+            </CardPickerMiddlePanelWrapper>
+          ) : null}
+          {isIndividual(pathID) || isStore(pathID) ? (
+            stepThreeView ? (
+              <CardPickerMiddlePanelWrapper>
+                <QualityPicker />
+              </CardPickerMiddlePanelWrapper>
+            ) : null
+          ) : stepThreeView ? (
             <CardPickerMiddlePanelWrapper>
               <InputSearch
                 placeholder="Add card title"
-                value={cardData.title}
+                value={DataTitle}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCardData({ ...cardData, title: e.target.value })
+                  dispatch(setCardTitle(e.target.value))
                 }
               />
             </CardPickerMiddlePanelWrapper>
           ) : null}
-          {stepThreeView ? (
+          {isIndividual(pathID) || isStore(pathID) ? (
+            stepFourView ? (
+              <CardPickerMiddlePanelWrapper>
+                <InputMessage />
+              </CardPickerMiddlePanelWrapper>
+            ) : null
+          ) : stepFourView ? (
             <CardPickerMiddlePanelWrapper>
-              <h1>Step 3</h1>
+              <QualityPicker />
             </CardPickerMiddlePanelWrapper>
           ) : null}
-          {stepFourView ? (
+          {isIndividual(pathID) || isStore(pathID) ? (
+            stepFiveView ? (
+              <CardPickerMiddlePanelWrapper>
+                <CardPreview />
+              </CardPickerMiddlePanelWrapper>
+            ) : null
+          ) : stepFiveView ? (
             <CardPickerMiddlePanelWrapper>
-              <h1>Step 4</h1>
-            </CardPickerMiddlePanelWrapper>
-          ) : null}
-          {stepFiveView ? (
-            <CardPickerMiddlePanelWrapper>
-              <h1>Step 5</h1>
+              <InputMessage />
             </CardPickerMiddlePanelWrapper>
           ) : null}
           {stepSixView ? (
             <CardPickerMiddlePanelWrapper>
-              <h1>Step 6</h1>
+              <CardPreview />
             </CardPickerMiddlePanelWrapper>
           ) : null}
           <pre>{JSON.stringify(cardData, null, 2)}</pre>
@@ -193,7 +232,24 @@ const SayThanks: React.FC = ({ users }: any) => {
                   : null;
               }}
             >
-              <Button buttonType="squared">Continue</Button>
+              <Button
+                buttonType="squared"
+                disabled={
+                  stepOneView
+                    ? true
+                    : stepTwoView && !DataTeamName.length
+                    ? true
+                    : stepFiveView && !DataContent.length
+                    ? true
+                    : stepThreeView && !DataTitle.length
+                    ? true
+                    : // : stepFourView && !DataContent.length
+                      // ? true
+                      false
+                }
+              >
+                Continue
+              </Button>
             </NextStepWrapper>
           ) : isIndividual(pathID) || isStore(pathID) ? (
             !stepFiveView ? (
@@ -212,19 +268,50 @@ const SayThanks: React.FC = ({ users }: any) => {
                     : null;
                 }}
               >
-                <Button buttonType="squared">Continue</Button>
+                <Button
+                  buttonType="squared"
+                  disabled={
+                    stepOneView
+                      ? true
+                      : !DataTitle.length
+                      ? true
+                      : stepFourView && !DataContent.length
+                      ? true
+                      : stepThreeView
+                      ? true
+                      : false
+                  }
+                >
+                  Continue
+                </Button>
               </NextStepWrapper>
             ) : null
           ) : null}
         </CardPickerMiddlePanel>
         <CardPickerRightPanel>
-          <h4>Card Preview</h4>
-          <CardPreviewSvg>
-            <CardPreviewIcon />
-            <p>
-              View how your card will appear on the Appreciations live wall.
-            </p>
-          </CardPreviewSvg>
+          {stepOneView && !stepOneDone ? (
+            <>
+              <h4>Card Preview</h4>
+              <CardPreviewSvg>
+                <CardPreviewIcon />
+                <p>
+                  View how your card will appear on the Appreciations live wall.
+                </p>
+              </CardPreviewSvg>
+            </>
+          ) : isIndividual(pathID) || isStore(pathID) ? (
+            !stepFiveView ? (
+              <CardPreview />
+            ) : (
+              <h1>PRIVACy</h1>
+            )
+          ) : isTeam(pathID) ? (
+            !stepSixView ? (
+              <CardPreview />
+            ) : (
+              <h1>Privacy</h1>
+            )
+          ) : null}
         </CardPickerRightPanel>
       </CardPickerStyled>
     </>
@@ -237,7 +324,7 @@ export const CardPickerStyled = styled.div`
   max-width: 1200px;
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: normal;
   justify-content: space-between;
   color: white;
   flex-direction: column;

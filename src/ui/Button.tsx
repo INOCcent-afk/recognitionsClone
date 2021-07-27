@@ -45,6 +45,10 @@ export const ButtonStyled = styled.button<{ squared: string | undefined }>`
     color: white;
   }
 
+  &:disabled {
+    opacity: 0.2;
+  }
+
   ${(props) =>
     props.squared &&
     `

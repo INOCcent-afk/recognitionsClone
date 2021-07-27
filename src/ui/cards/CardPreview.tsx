@@ -1,32 +1,29 @@
 import React from "react";
 
-import { CardModelTypes } from "../../models/CardModelTypes";
-import { useAppDispatch } from "../../redux/hook";
-import { BrandingColors } from "../../utils/Colors";
 import { ScreenSizes } from "../../utils/Screens";
+import { useAppSelector } from "../../redux/hook";
+import { BrandingColors } from "../../utils/Colors";
 
-import Quality from "./Quality";
 import StarIcon from "../../icons/StarIcon";
+import Quality from "./Quality";
 
 import styled from "styled-components";
 
-const CardComponent: React.FC<CardModelTypes> = ({
-  date,
-  receiver,
-  receiverJobDesc,
-  icon,
-  title,
-  content,
-  sender,
-  senderJobDesc,
-  cardType,
-  value,
-  gif,
-  membersCount,
-  members,
-  event,
-}: CardModelTypes) => {
-  const dispatch = useAppDispatch();
+const CardPreview = () => {
+  const date = useAppSelector((state) => state.CardData.date);
+  const receiver = useAppSelector((state) => state.CardData.receiver);
+  const receiverJobDesc = useAppSelector(
+    (state) => state.CardData.receiverJobDesc
+  );
+  const membersCount = useAppSelector((state) => state.CardData.membersCount);
+  const gif = useAppSelector((state) => state.CardData.gif);
+  const sender = useAppSelector((state) => state.CardData.sender);
+  const senderJobDesc = useAppSelector((state) => state.CardData.senderJobDesc);
+  const value = useAppSelector((state) => state.CardData.value);
+  const title = useAppSelector((state) => state.CardData.title);
+  const cardType = useAppSelector((state) => state.CardData.cardType);
+  const picture = useAppSelector((state) => state.CardData.icon);
+  const content = useAppSelector((state) => state.CardData.content);
 
   const [color, setColor] = React.useState(BrandingColors.violet);
 
@@ -41,7 +38,7 @@ const CardComponent: React.FC<CardModelTypes> = ({
   }, []);
 
   return (
-    <CardComponentStyled onClick={() => dispatch(event)}>
+    <CardComponentStyled>
       <CardComponentWrapperStyled>
         <CardComponentHeaderStyled>
           <CardComponentDateStyled>{date}</CardComponentDateStyled>
@@ -52,11 +49,11 @@ const CardComponent: React.FC<CardModelTypes> = ({
           <CardComponentImage>
             <img
               src={
-                cardType === "team"
+                cardType === "Team"
                   ? "/profile-team-dark.svg"
-                  : cardType === "store"
+                  : cardType === "Store"
                   ? "/profile-group.svg"
-                  : icon
+                  : picture
               }
               alt="user-image"
             />
@@ -75,18 +72,25 @@ const CardComponent: React.FC<CardModelTypes> = ({
             </CardComponentGifStyled>
           ) : null}
         </CardComponentBodyStyled>
+        {content.length ? (
+          <CardComponentContentStyled>
+            <p>"{content}"</p>
+          </CardComponentContentStyled>
+        ) : null}
         <CardComponentFooterStyled>
           <p>
             <span>{sender}</span>,{senderJobDesc}
           </p>
         </CardComponentFooterStyled>
       </CardComponentWrapperStyled>
-      <Quality qualityColor={color} text={value} icon={<StarIcon />} />
+      {value.length ? (
+        <Quality qualityColor={color} text={value} icon={<StarIcon />} />
+      ) : null}
     </CardComponentStyled>
   );
 };
 
-export default CardComponent;
+export default CardPreview;
 
 export const CardComponentStyled = styled.div`
   background-color: white;
@@ -95,11 +99,13 @@ export const CardComponentStyled = styled.div`
   flex-direction: column;
   position: relative;
   max-width: 329px;
-  cursor: pointer;
+  color: black;
+  margin: 20px 0;
 
   .rounded-only {
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
+    cursor: pointer;
   }
 
   @media only screen and (min-width: ${ScreenSizes.lg}) {
@@ -127,6 +133,8 @@ export const CardComponentImage = styled.div`
 `;
 
 export const CardComponentHeaderStyled = styled.div``;
+
+export const CardComponentContentStyled = styled.div``;
 
 export const CardComponentDateStyled = styled.div`
   opacity: 0.6;

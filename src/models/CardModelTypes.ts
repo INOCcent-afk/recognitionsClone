@@ -10,6 +10,7 @@ export type CardModelTypes = {
   gif?: string;
   cardType: string;
   value: string;
+  teamName: string;
   members?: string;
   membersCount?: number;
   event: any;

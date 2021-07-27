@@ -64,10 +64,12 @@ const appreciationsLivewall = () => {
               receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
               title="Testing Thanks !"
               sender="Charlotte Sims"
+              icon="https://reqres.in/img/faces/3-image.jpg"
               senderJobDesc="People Services Specialist (Secondment)"
               gif="https://inoccent-afk.github.io/portfolioinoc/load.d699b3a7.gif"
               value="We take responsibility"
               event={openCardDetails()}
+              teamName="Uxc Dave"
             />
             {/* Team */}
             <CardComponent
@@ -77,9 +79,11 @@ const appreciationsLivewall = () => {
               receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
               title="Testing Thanks !"
               sender="Charlotte Sims"
+              icon="https://reqres.in/img/faces/3-image.jpg"
               senderJobDesc="People Services Specialist (Secondment)"
               value="We take responsibility"
               event={openCardDetails()}
+              teamName="Uxc Dave"
             />
             {/* Store */}
             <CardComponent
@@ -89,9 +93,11 @@ const appreciationsLivewall = () => {
               receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
               title="Testing Thanks !"
               sender="Charlotte Sims"
+              icon="https://reqres.in/img/faces/3-image.jpg"
               senderJobDesc="People Services Specialist (Secondment)"
               value="We take responsibility"
               event={openCardDetails()}
+              teamName="Uxc Dave"
             />
             {/* individual */}
             <CardComponent
@@ -101,10 +107,12 @@ const appreciationsLivewall = () => {
               receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
               title="Testing Thanks !"
               sender="Charlotte Sims"
+              icon="https://reqres.in/img/faces/3-image.jpg"
               senderJobDesc="People Services Specialist (Secondment)"
               gif="https://inoccent-afk.github.io/portfolioinoc/load.d699b3a7.gif"
               value="We take responsibility"
               event={openCardDetails()}
+              teamName="Uxc Dave"
             />
           </Masonry>
         </PageCardsWrapper>
