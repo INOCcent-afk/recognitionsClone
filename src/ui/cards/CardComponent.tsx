@@ -94,7 +94,6 @@ export const CardComponentStyled = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  max-width: 329px;
   cursor: pointer;
 
   .rounded-only {

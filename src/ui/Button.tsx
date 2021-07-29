@@ -16,7 +16,7 @@ const Button: React.FC<Props> = ({
   additionalClassname,
   buttonType,
   disabled,
-  type,
+  type = "button",
 }: Props) => {
   return (
     <ButtonStyled

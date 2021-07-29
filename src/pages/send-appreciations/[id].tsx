@@ -6,18 +6,20 @@ import { isIndividual, isStore, isTeam } from "../../utils/checkPath";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { ScreenSizes } from "../../utils/Screens";
 import { getUsers } from "../../utils/api/getUsers";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { getGifs } from "../../utils/api/getGifs";
 
 import {
   setCardDefaultState,
   setCardReceiver,
+  setCardSender,
+  setCardSenderJobDesc,
   setCardTeamName,
   setCardTitle,
   setCardType,
 } from "../../redux/data.slice";
 
 import PageHeader from "../../ui/PageHeader";
-
 import styled from "styled-components";
 import CardPickerSteps from "../../ui/CardPickerSteps";
 import InputSearch from "../../ui/inputs/InputSearch";
@@ -26,6 +28,9 @@ import Button from "../../ui/Button";
 import SearchDropdown from "../../ui/searchDropdown";
 import QualityPicker from "../../ui/cards/QualityPicker";
 import InputMessage from "../../ui/inputs/InputMessage";
+import CardPreview from "../../ui/cards/CardPreview";
+import ModalContainer from "../../ui/Modals/ModalContainer";
+import ModalGif from "../../ui/Modals/ModalGif";
 
 import {
   defaultState,
@@ -40,14 +45,13 @@ import {
   step5View,
   step6View,
 } from "../../redux/SendForm.slice";
-import CardPreview from "../../ui/cards/CardPreview";
-import { getGifs } from "../../utils/api/getGifs";
-import ModalContainer from "../../ui/Modals/ModalContainer";
-import ModalGif from "../../ui/Modals/ModalGif";
+import { createCard } from "../../utils/api/newCard";
+import { useSession } from "next-auth/client";
 
 const SayThanks: React.FC = ({ users, gifs }: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [session] = useSession();
 
   const [title, setTitle] = React.useState("individual");
 
@@ -68,7 +72,7 @@ const SayThanks: React.FC = ({ users, gifs }: any) => {
 
   const pathID = router.query.id;
 
-  const { data } = useQuery("users", getUsers, {
+  const { data: usersData } = useQuery("users", getUsers, {
     initialData: users,
   });
 
@@ -76,9 +80,14 @@ const SayThanks: React.FC = ({ users, gifs }: any) => {
     initialData: gifs,
   });
 
+  const { mutateAsync: AddCard } = useMutation(createCard);
+
   const ModalGifStatus = useAppSelector(
     (state) => state.Modals.openCardGif.isOpen
   );
+
+  const name = session?.user?.name;
+  const email = session?.user?.email;
 
   React.useEffect(() => {
     if (isIndividual(pathID)) {
@@ -91,6 +100,8 @@ const SayThanks: React.FC = ({ users, gifs }: any) => {
 
     dispatch(defaultState());
     dispatch(setCardDefaultState());
+    dispatch(setCardSender(name));
+    dispatch(setCardSenderJobDesc(email));
   }, []);
 
   React.useEffect(() => {
@@ -99,7 +110,7 @@ const SayThanks: React.FC = ({ users, gifs }: any) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-
+    AddCard(cardData);
     router.push("/send-appreciations");
   };
 
@@ -168,7 +179,7 @@ const SayThanks: React.FC = ({ users, gifs }: any) => {
                 }
               />
               {DataReceiver ? (
-                <SearchDropdown receiver={DataReceiver} data={data} />
+                <SearchDropdown receiver={DataReceiver} data={usersData} />
               ) : null}
             </CardPickerMiddlePanelWrapper>
           ) : null}

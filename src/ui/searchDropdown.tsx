@@ -1,13 +1,15 @@
 import React from "react";
-import styled from "styled-components";
+
+import { useAppDispatch } from "../redux/hook";
+import { step1Done, step2View } from "../redux/SendForm.slice";
+import { BrandingColors } from "../utils/Colors";
 import {
   setCardIcon,
   setCardReceiver,
   setCardReceiverJobDesc,
 } from "../redux/data.slice";
-import { useAppDispatch } from "../redux/hook";
-import { step1Done, step2View } from "../redux/SendForm.slice";
-import { BrandingColors } from "../utils/Colors";
+
+import styled from "styled-components";
 
 type Props = {
   data: {

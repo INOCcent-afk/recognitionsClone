@@ -1,9 +1,11 @@
 import React from "react";
 
 import { BrandingColors } from "../utils/Colors";
-
 import { useAppSelector } from "../redux/hook";
 import { openCardDetails, openFilterLiveWall } from "../redux/Modal.slice";
+import { getCards } from "../utils/api/getCards";
+import { useQuery } from "react-query";
+import { CardModelTypes } from "../models/CardModelTypes";
 
 import PageContainer from "../containers/PageContainer";
 import ModalContainer from "../ui/Modals/ModalContainer";
@@ -22,7 +24,11 @@ const breakpointColumnsObj = {
   700: 1,
 };
 
-const appreciationsLivewall = () => {
+type Props = {
+  cards: any;
+};
+
+const appreciationsLivewall: React.FC<Props> = ({ cards }: Props) => {
   const ModalFilterStatus = useAppSelector(
     (state) => state.Modals.openFilterLiveWall.isOpen
   );
@@ -30,6 +36,10 @@ const appreciationsLivewall = () => {
   const ModalCardDetailsStatus = useAppSelector(
     (state) => state.Modals.openCardDetails.isOpen
   );
+
+  const { data: cardsData } = useQuery("cards", getCards, {
+    initialData: cards,
+  });
 
   return (
     <>
@@ -56,64 +66,23 @@ const appreciationsLivewall = () => {
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {/* individual */}
-            <CardComponent
-              cardType="individual"
-              date="22/07/2021"
-              receiver="Alan Milbrow"
-              receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
-              title="Testing Thanks !"
-              sender="Charlotte Sims"
-              icon="https://reqres.in/img/faces/3-image.jpg"
-              senderJobDesc="People Services Specialist (Secondment)"
-              gif="https://inoccent-afk.github.io/portfolioinoc/load.d699b3a7.gif"
-              value="We take responsibility"
-              event={openCardDetails()}
-              teamName="Uxc Dave"
-            />
-            {/* Team */}
-            <CardComponent
-              cardType="team"
-              date="22/07/2021"
-              receiver="Alan Milbrow"
-              receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
-              title="Testing Thanks !"
-              sender="Charlotte Sims"
-              icon="https://reqres.in/img/faces/3-image.jpg"
-              senderJobDesc="People Services Specialist (Secondment)"
-              value="We take responsibility"
-              event={openCardDetails()}
-              teamName="Uxc Dave"
-            />
-            {/* Store */}
-            <CardComponent
-              cardType="store"
-              date="22/07/2021"
-              receiver="Alan Milbrow"
-              receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
-              title="Testing Thanks !"
-              sender="Charlotte Sims"
-              icon="https://reqres.in/img/faces/3-image.jpg"
-              senderJobDesc="People Services Specialist (Secondment)"
-              value="We take responsibility"
-              event={openCardDetails()}
-              teamName="Uxc Dave"
-            />
-            {/* individual */}
-            <CardComponent
-              cardType="individual"
-              date="22/07/2021"
-              receiver="Alan Milbrow"
-              receiverJobDesc="People Propositions & Engagement Lead (UK & ROI)"
-              title="Testing Thanks !"
-              sender="Charlotte Sims"
-              icon="https://reqres.in/img/faces/3-image.jpg"
-              senderJobDesc="People Services Specialist (Secondment)"
-              gif="https://inoccent-afk.github.io/portfolioinoc/load.d699b3a7.gif"
-              value="We take responsibility"
-              event={openCardDetails()}
-              teamName="Uxc Dave"
-            />
+            {cardsData.map((card: CardModelTypes) => (
+              <CardComponent
+                key={card._id}
+                cardType={card.cardType}
+                date={card.date}
+                receiver={card.receiver}
+                receiverJobDesc={card.receiverJobDesc}
+                title={card.title}
+                sender={card.sender}
+                icon={card.icon}
+                senderJobDesc={card.senderJobDesc}
+                gif={card.gif}
+                value={card.value}
+                event={openCardDetails()}
+                teamName={card.teamName}
+              />
+            ))}
           </Masonry>
         </PageCardsWrapper>
       </PageContainer>
@@ -129,3 +98,11 @@ export const PageCardsWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
+
+export const getServerSideProps = async () => {
+  const cards = await getCards();
+
+  return {
+    props: { cards },
+  };
+};

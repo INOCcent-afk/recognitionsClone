@@ -13,5 +13,6 @@ export type CardModelTypes = {
   teamName: string;
   members?: string;
   membersCount?: number;
+  _id?: string;
   event: any;
 };
