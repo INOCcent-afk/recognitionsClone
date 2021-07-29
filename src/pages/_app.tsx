@@ -1,3 +1,5 @@
+import React from "react";
+
 import type { AppProps } from "next/app";
 
 // Redux
@@ -14,15 +16,20 @@ import "../styles/main.scss";
 import { QueryClient, QueryClientProvider } from "react-query";
 const queryClient = new QueryClient();
 
+//NEXT-AUTH
+import { Provider } from "next-auth/client";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReduxProvider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ReduxProvider>
-    </QueryClientProvider>
+    <Provider session={pageProps.session}>
+      <QueryClientProvider client={queryClient}>
+        <ReduxProvider store={store}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ReduxProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 }
 export default MyApp;

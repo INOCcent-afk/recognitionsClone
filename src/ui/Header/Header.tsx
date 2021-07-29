@@ -5,20 +5,27 @@ import styled from "styled-components";
 
 import { useRouter } from "next/router";
 import { ScreenSizes } from "../../utils/Screens";
+import { signOut, useSession } from "next-auth/client";
 
 import CloseIcon from "../../icons/CloseIcon";
 import MenuIcon from "../../icons/MenuIcon";
 import NavHeader from "./NavHeader";
 import SideBar from "./SideBar";
-import NavLink from "./NavLink";
 
 const Header = () => {
   const [menu, setMenu] = React.useState(false);
+  const [session] = useSession();
   const router = useRouter();
 
   React.useEffect(() => {
     setMenu(false);
   }, [router]);
+
+  React.useEffect(() => {
+    if (!session) {
+      router.push("/");
+    }
+  }, [session]);
 
   return (
     <>
@@ -44,12 +51,9 @@ const Header = () => {
           )}
         </MenuStyled>
         <SeperateLinkStyled>
-          <NavLink
-            href="/admin"
-            activeClass="bg-black"
-            name="Admin"
-            bgColor="black"
-          />
+          <p className="logoutBtn" onClick={() => signOut()}>
+            Logout
+          </p>
         </SeperateLinkStyled>
       </HeaderStyled>
       {menu ? <SideBar /> : null}

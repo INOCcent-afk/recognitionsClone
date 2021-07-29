@@ -10,6 +10,9 @@ const initialState = {
   openCardDetails: {
     isOpen: false,
   },
+  openCardGif: {
+    isOpen: false,
+  },
 };
 
 export const ModalSlice = createSlice({
@@ -32,6 +35,14 @@ export const ModalSlice = createSlice({
         },
       };
     },
+    openCardGif: (state) => {
+      return {
+        ...state,
+        openCardGif: {
+          isOpen: !state.openCardGif.isOpen,
+        },
+      };
+    },
     openCardDetails: (state) => {
       return {
         ...state,
@@ -40,19 +51,8 @@ export const ModalSlice = createSlice({
         },
       };
     },
-    closeAllModal: (state) => {
-      return {
-        ...state,
-        openFilterLiveWall: {
-          isOpen: false,
-        },
-        openCardDetails: {
-          isOpen: false,
-        },
-        openFilterMyWall: {
-          isOpen: false,
-        },
-      };
+    closeAllModal: () => {
+      return initialState;
     },
   },
 });
@@ -61,6 +61,7 @@ export const {
   openFilterLiveWall,
   openCardDetails,
   openCardFilterMyWall,
+  openCardGif,
   closeAllModal,
 } = ModalSlice.actions;
 

@@ -8,8 +8,8 @@ type CardDataType = {
   icon: string;
   title: string;
   content: string;
-  sender: string;
-  senderJobDesc: string;
+  sender: string | null | undefined;
+  senderJobDesc: string | null | undefined;
   gif: string;
   cardType: string;
   value: string;
@@ -69,13 +69,19 @@ const DataSlice = createSlice({
         content: action.payload,
       };
     },
-    setCardSender: (state, action: PayloadAction<string>) => {
+    setCardSender: (
+      state,
+      action: PayloadAction<string | null | undefined>
+    ) => {
       return {
         ...state,
         sender: action.payload,
       };
     },
-    setCardSenderJobDesc: (state, action: PayloadAction<string>) => {
+    setCardSenderJobDesc: (
+      state,
+      action: PayloadAction<string | null | undefined>
+    ) => {
       return {
         ...state,
         senderJobDesc: action.payload,

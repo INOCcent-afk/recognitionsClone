@@ -2,6 +2,7 @@ import React from "react";
 
 import { ScreenSizes } from "../../utils/Screens";
 import { BrandingColors } from "../../utils/Colors";
+import { signOut } from "next-auth/client";
 
 import NavLink from "./NavLink";
 
@@ -43,13 +44,8 @@ const NavHeader: React.FC = () => {
             bgColor={BrandingColors.violet}
           />
         </li>
-        <li>
-          <NavLink
-            href="/admin"
-            activeClass="activelink-black"
-            name="Admin"
-            bgColor="black"
-          />
+        <li className="logoutBtn" onClick={() => signOut()}>
+          Logout
         </li>
       </NavHeaderStyled>
     </>

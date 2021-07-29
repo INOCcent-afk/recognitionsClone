@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { ScreenSizes } from "../../utils/Screens";
 import { getUsers } from "../../utils/api/getUsers";
 import { useQuery } from "react-query";
+
 import {
   setCardDefaultState,
   setCardReceiver,
@@ -40,8 +41,11 @@ import {
   step6View,
 } from "../../redux/SendForm.slice";
 import CardPreview from "../../ui/cards/CardPreview";
+import { getGifs } from "../../utils/api/getGifs";
+import ModalContainer from "../../ui/Modals/ModalContainer";
+import ModalGif from "../../ui/Modals/ModalGif";
 
-const SayThanks: React.FC = ({ users }: any) => {
+const SayThanks: React.FC = ({ users, gifs }: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -68,6 +72,14 @@ const SayThanks: React.FC = ({ users }: any) => {
     initialData: users,
   });
 
+  const { data: gifsData } = useQuery("gifs", getGifs, {
+    initialData: gifs,
+  });
+
+  const ModalGifStatus = useAppSelector(
+    (state) => state.Modals.openCardGif.isOpen
+  );
+
   React.useEffect(() => {
     if (isIndividual(pathID)) {
       setTitle("Individual");
@@ -85,6 +97,12 @@ const SayThanks: React.FC = ({ users }: any) => {
     dispatch(setCardType(title));
   }, [title]);
 
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    router.push("/send-appreciations");
+  };
+
   return (
     <>
       <PageHeader
@@ -94,7 +112,13 @@ const SayThanks: React.FC = ({ users }: any) => {
         isButton={false}
         isButtonClose={true}
       />
-      <CardPickerStyled>
+      {ModalGifStatus ? (
+        <ModalContainer>
+          <ModalGif data={gifsData} />
+        </ModalContainer>
+      ) : null}
+      {/* <pre style={{ color: "white" }}>{JSON.stringify(cardData, null, 2)}</pre> */}
+      <CardPickerStyled onSubmit={handleSubmit}>
         <CardPickerLeftPanel>
           {isIndividual(pathID) ? (
             <CardPickerSteps
@@ -215,7 +239,7 @@ const SayThanks: React.FC = ({ users }: any) => {
               <CardPreview />
             </CardPickerMiddlePanelWrapper>
           ) : null}
-          <pre>{JSON.stringify(cardData, null, 2)}</pre>
+
           {isTeam(pathID) && !stepSixView ? (
             <NextStepWrapper
               onClick={() => {
@@ -243,9 +267,7 @@ const SayThanks: React.FC = ({ users }: any) => {
                     ? true
                     : stepThreeView && !DataTitle.length
                     ? true
-                    : // : stepFourView && !DataContent.length
-                      // ? true
-                      false
+                    : false
                 }
               >
                 Continue
@@ -290,7 +312,7 @@ const SayThanks: React.FC = ({ users }: any) => {
         </CardPickerMiddlePanel>
         <CardPickerRightPanel>
           {stepOneView && !stepOneDone ? (
-            <>
+            <PreviewTemplateStyled>
               <h4>Card Preview</h4>
               <CardPreviewSvg>
                 <CardPreviewIcon />
@@ -298,18 +320,74 @@ const SayThanks: React.FC = ({ users }: any) => {
                   View how your card will appear on the Appreciations live wall.
                 </p>
               </CardPreviewSvg>
-            </>
+            </PreviewTemplateStyled>
           ) : isIndividual(pathID) || isStore(pathID) ? (
             !stepFiveView ? (
               <CardPreview />
             ) : (
-              <h1>PRIVACy</h1>
+              <PrivacyStyled>
+                <p>Who will see this appreciation card?</p>
+                <p>
+                  All appreciation cards are set to be shared on the
+                  appreciations live wall by default so that others can share
+                  the recognition of their colleagues.
+                </p>
+                <p>
+                  However if you would prefer not to share your thank you card
+                  publicly you can choose to keep the card private for the
+                  recipient.
+                </p>
+                <p>Who will see this appreciation card?</p>
+                <p>
+                  All appreciation cards are set to be shared on the
+                  appreciations live wall by default so that others can share
+                  the recognition of their colleagues.
+                </p>
+                <p>
+                  However if you would prefer not to share your thank you card
+                  publicly you can choose to keep the card private for the
+                  recipient.
+                </p>
+                <NextStepWrapper>
+                  <Button buttonType="squared" type="submit">
+                    Continue
+                  </Button>
+                </NextStepWrapper>
+              </PrivacyStyled>
             )
           ) : isTeam(pathID) ? (
             !stepSixView ? (
               <CardPreview />
             ) : (
-              <h1>Privacy</h1>
+              <PrivacyStyled>
+                <p>Who will see this appreciation card?</p>
+                <p>
+                  All appreciation cards are set to be shared on the
+                  appreciations live wall by default so that others can share
+                  the recognition of their colleagues.
+                </p>
+                <p>
+                  However if you would prefer not to share your thank you card
+                  publicly you can choose to keep the card private for the
+                  recipient.
+                </p>
+                <p>Who will see this appreciation card?</p>
+                <p>
+                  All appreciation cards are set to be shared on the
+                  appreciations live wall by default so that others can share
+                  the recognition of their colleagues.
+                </p>
+                <p>
+                  However if you would prefer not to share your thank you card
+                  publicly you can choose to keep the card private for the
+                  recipient.
+                </p>
+                <NextStepWrapper>
+                  <Button buttonType="squared" type="submit">
+                    Continue
+                  </Button>
+                </NextStepWrapper>
+              </PrivacyStyled>
             )
           ) : null}
         </CardPickerRightPanel>
@@ -320,7 +398,7 @@ const SayThanks: React.FC = ({ users }: any) => {
 
 export default SayThanks;
 
-export const CardPickerStyled = styled.div`
+export const CardPickerStyled = styled.form`
   max-width: 1200px;
   width: 100%;
   display: flex;
@@ -344,10 +422,16 @@ export const CardPickerLeftPanel = styled.div`
   margin: 20px;
 `;
 
+export const PrivacyStyled = styled.div`
+  p {
+    margin-bottom: 20px;
+  }
+`;
+
 export const CardPickerMiddlePanel = styled.div`
   background-color: ${BrandingColors.gray};
   flex-basis: 40%;
-  padding: 30px 20px 20px 20px;
+  padding: 30px 20px 80px 20px;
   width: 100%;
   min-height: 650px;
   position: relative;
@@ -363,11 +447,30 @@ export const CardPickerMiddlePanelWrapper = styled.div`
 `;
 
 export const CardPickerRightPanel = styled.div`
-  background-color: ${BrandingColors.gray};
+  background-color: black;
+  position: relative;
   flex-basis: 35%;
-  padding: 30px 40px 20px 40px;
+  padding: 30px 40px 80px 40px;
   border-radius: 10px;
-  min-height: 650px;
+  min-height: 300px;
+  margin: 30px 0;
+
+  .preview-card-inside {
+    display: none;
+  }
+
+  @media only screen and (min-width: ${ScreenSizes.xl}) {
+    background-color: ${BrandingColors.gray};
+    display: block;
+    margin: unset;
+
+    .preview-card-inside {
+      display: block;
+    }
+  }
+`;
+
+export const PreviewTemplateStyled = styled.div`
   display: none;
 
   @media only screen and (min-width: ${ScreenSizes.xl}) {
@@ -399,8 +502,9 @@ export const NextStepWrapper = styled.div`
 
 export const getServerSideProps = async () => {
   const users = await getUsers();
+  const gifs = await getGifs();
 
   return {
-    props: { users },
+    props: { users, gifs },
   };
 };

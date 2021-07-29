@@ -1,20 +1,27 @@
 import React from "react";
 
 import { ScreenSizes } from "../../utils/Screens";
-import { useAppSelector } from "../../redux/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { BrandingColors } from "../../utils/Colors";
 
 import StarIcon from "../../icons/StarIcon";
 import Quality from "./Quality";
 
 import styled from "styled-components";
+import PhotographIcon from "../../icons/PhotographIcon";
+import CloseIcon from "../../icons/CloseIcon";
+import { openCardGif } from "../../redux/Modal.slice";
+import { setCardGif } from "../../redux/data.slice";
 
 const CardPreview = () => {
+  const dispatch = useAppDispatch();
+
   const date = useAppSelector((state) => state.CardData.date);
   const receiver = useAppSelector((state) => state.CardData.receiver);
   const receiverJobDesc = useAppSelector(
     (state) => state.CardData.receiverJobDesc
   );
+
   const membersCount = useAppSelector((state) => state.CardData.membersCount);
   const gif = useAppSelector((state) => state.CardData.gif);
   const sender = useAppSelector((state) => state.CardData.sender);
@@ -38,7 +45,7 @@ const CardPreview = () => {
   }, []);
 
   return (
-    <CardComponentStyled>
+    <CardComponentStyled className="preview-card-inside">
       <CardComponentWrapperStyled>
         <CardComponentHeaderStyled>
           <CardComponentDateStyled>{date}</CardComponentDateStyled>
@@ -66,16 +73,16 @@ const CardPreview = () => {
         </CardComponentHeaderStyled>
         <CardComponentBodyStyled>
           <p>{title}</p>
-          {gif ? (
-            <CardComponentGifStyled>
-              <img src={gif} alt="" />
-            </CardComponentGifStyled>
-          ) : null}
         </CardComponentBodyStyled>
         {content.length ? (
           <CardComponentContentStyled>
             <p>"{content}"</p>
           </CardComponentContentStyled>
+        ) : null}
+        {gif ? (
+          <CardComponentGifStyled>
+            <img src={gif} alt="" />
+          </CardComponentGifStyled>
         ) : null}
         <CardComponentFooterStyled>
           <p>
@@ -86,6 +93,16 @@ const CardPreview = () => {
       {value.length ? (
         <Quality qualityColor={color} text={value} icon={<StarIcon />} />
       ) : null}
+
+      {gif.length ? (
+        <GifButton onClick={() => dispatch(setCardGif(""))}>
+          <CloseIcon />
+        </GifButton>
+      ) : (
+        <GifButton onClick={() => dispatch(openCardGif())}>
+          <PhotographIcon stroke="#000000" width="30" height="30" />
+        </GifButton>
+      )}
     </CardComponentStyled>
   );
 };
@@ -98,9 +115,9 @@ export const CardComponentStyled = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  max-width: 329px;
+  max-width: 350px;
+  margin: 80px auto;
   color: black;
-  margin: 20px 0;
 
   .rounded-only {
     border-bottom-right-radius: 4px;
@@ -108,9 +125,26 @@ export const CardComponentStyled = styled.div`
     cursor: pointer;
   }
 
-  @media only screen and (min-width: ${ScreenSizes.lg}) {
-    max-width: unset;
+  @media only screen and (min-width: ${ScreenSizes.xl}) {
+    max-width: 329px;
+    margin: 30px auto auto auto;
   }
+`;
+
+export const GifButton = styled.div`
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  background-color: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid black;
+  transform: translate(-50%, -20px);
 `;
 
 export const CardComponentWrapperStyled = styled.div`
@@ -134,7 +168,9 @@ export const CardComponentImage = styled.div`
 
 export const CardComponentHeaderStyled = styled.div``;
 
-export const CardComponentContentStyled = styled.div``;
+export const CardComponentContentStyled = styled.div`
+  margin: 30px 0;
+`;
 
 export const CardComponentDateStyled = styled.div`
   opacity: 0.6;
@@ -171,6 +207,7 @@ export const CardComponentBodyStyled = styled.div`
 
 export const CardComponentFooterStyled = styled.div`
   line-height: 20px;
+  margin: 10px 0;
   opacity: 0.6;
   font-style: italic;
   font-size: 14px;
